@@ -4,12 +4,12 @@
 
 Created this to get a better understanding of the follow concepts:
 
-> node.js
-> axios/APIs
-> promises
-> process.argv
-> moment.js
-> .env
+> - node.js
+> - axios/APIs
+> - promises
+> - process.argv
+> - moment.js
+> - .env
 
 ## Overview:
 
@@ -26,3 +26,4 @@ call node liri.js with the following commands:
 
 `node liri.js concert-this artist`
 This will return a list of concerts coming up from this artist
+![Image of concert-this](https://github.com/trentoncornwall/liri-node-app/blob/master/images/concert-this.png)
