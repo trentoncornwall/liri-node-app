@@ -1,8 +1,11 @@
 //* requirements
 require("dotenv").config();
 const keys = require("./keys.js");
+const Spotify = require("node-spotify-api");
+
 const axios = require("axios");
 const moment = require("moment");
+
 // Parses commands and song name or band
 const command = process.argv[2];
 const search = process.argv.slice(3).join(" ");
@@ -17,6 +20,7 @@ switch (command) {
 
 	case "spotify-this-song":
 		//?search Spotify API (Artist, Song Name, Preview Link, The Album)
+		spotifyThis(search);
 		break;
 
 	case "movie-this":
@@ -49,5 +53,37 @@ function concertThis(term) {
 		})
 		.catch(error => {
 			throw error;
+		});
+}
+
+//!spotify-this-song
+function spotifyThis(term) {
+	spotify = new Spotify({
+		id: keys.spotify.id,
+		secret: keys.spotify.secret
+	});
+
+	spotify
+		.search({
+			type: "track",
+			query: term
+		})
+		.then(response => {
+			//! if no reply
+			if (response.tracks.items.length === 0) {
+				spotifyThis("The Sign");
+			}
+
+			response.tracks.items.forEach(data =>
+				// prints info
+				console.log(
+					`Artist: ${data.artists[0].name} \n   Song: ${
+						data.name
+					}\n   Preview: ${data.preview_url}\n   Album: ${data.album.name} \n\n`
+				)
+			);
+		})
+		.catch(err => {
+			throw err;
 		});
 }
