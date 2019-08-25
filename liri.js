@@ -1,37 +1,41 @@
 //* requirements
 require("dotenv").config();
+const fs = require("fs");
 const keys = require("./keys.js");
 const Spotify = require("node-spotify-api");
 const axios = require("axios");
 const moment = require("moment");
 
 //* Parses commands and song name or band
-const command = process.argv[2];
-const search = process.argv.slice(3).join(" ");
+let command = process.argv[2];
+let search = process.argv.slice(3).join(" ");
 
 //* identies which command the user wants
-switch (command) {
-	case "concert-this":
-		//?serach Bands in Town Artist Events API
-		concertThis(search);
-		break;
+function searchMe(command) {
+	switch (command) {
+		case "concert-this":
+			//?serach Bands in Town Artist Events API
+			concertThis(search);
+			break;
 
-	case "spotify-this-song":
-		//?search Spotify API (Artist, Song Name, Preview Link, The Album)
-		spotifyThis(search);
-		break;
+		case "spotify-this-song":
+			//?search Spotify API (Artist, Song Name, Preview Link, The Album)
+			spotifyThis(search);
+			break;
 
-	case "movie-this":
-		//?returns Title, Year, IMDB Rating, Rottoen Tom Rating, Country movie Produced, Langauge, Plot, Actors
-		movieThis(search);
-		break;
+		case "movie-this":
+			//?returns Title, Year, IMDB Rating, Rottoen Tom Rating, Country movie Produced, Langauge, Plot, Actors
+			movieThis(search);
+			break;
 
-	case "do-what-it-says":
-		//?using fs node, liri will take the text inside of random.txt and call one of liri's commands
-		break;
+		case "do-what-it-says":
+			//?using fs node, liri will take the text inside of random.txt and call one of liri's commands
+			doWhatItSays();
+			break;
 
-	default:
-		break;
+		default:
+			break;
+	}
 }
 
 //! concert-this
@@ -108,3 +112,19 @@ function movieThis(term) {
         `);
 	});
 }
+
+//!do-what-it-says
+function doWhatItSays() {
+	fs.readFile("random.txt", "utf8", (err, data) => {
+		if (err) {
+			throw err;
+		} else {
+			let datas = data.split(",");
+			command = datas[0];
+			search = datas[1];
+			searchMe(command);
+		}
+	});
+}
+
+searchMe(command);
