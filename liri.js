@@ -2,16 +2,14 @@
 require("dotenv").config();
 const keys = require("./keys.js");
 const Spotify = require("node-spotify-api");
-
 const axios = require("axios");
 const moment = require("moment");
 
-// Parses commands and song name or band
+//* Parses commands and song name or band
 const command = process.argv[2];
 const search = process.argv.slice(3).join(" ");
 
-// identies which command the user wants
-
+//* identies which command the user wants
 switch (command) {
 	case "concert-this":
 		//?serach Bands in Town Artist Events API
@@ -25,6 +23,7 @@ switch (command) {
 
 	case "movie-this":
 		//?returns Title, Year, IMDB Rating, Rottoen Tom Rating, Country movie Produced, Langauge, Plot, Actors
+		movieThis(search);
 		break;
 
 	case "do-what-it-says":
@@ -86,4 +85,26 @@ function spotifyThis(term) {
 		.catch(err => {
 			throw err;
 		});
+}
+
+//!movie-this
+function movieThis(term) {
+	let url = `http://www.omdbapi.com/?apikey=trilogy&t=${term}`;
+	axios.get(url).then(response => {
+		//*If theres no response
+		if (response.data.Response === "False") {
+			movieThis("Mr. Nobody");
+		}
+		//* If there is a response
+		console.log(`
+        Title: ${response.data.Title} \n
+           Year: ${response.data.Year} \n
+           IMDB Rating: ${response.data.Ratings[0].Value} \n
+           Rotten Tomatoes: ${response.data.Ratings[1].Value} \n
+           Country: ${response.data.Country} \n
+           Language: ${response.data.Language} \n
+           Plot: ${response.data.Plot} \n
+           Actors: ${response.data.Actors} \n \n
+        `);
+	});
 }
